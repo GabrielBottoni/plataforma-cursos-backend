@@ -106,11 +106,11 @@ npm start
 O servidor estará disponível em `http://localhost:3000`.
 
 ## Principais Rotas
-`POST /usuarios` — Cadastro de usuário
-`POST /login` — Login (retorna JWT)
-`GET /cursos` — Lista de cursos (autenticado)
-`POST /cursos/:idCurso` — Inscrever-se em curso (autenticado)
-`PATCH /cursos/:idCurso` — Cancelar inscrição (autenticado)
-`GET /cursos/inscritos/:idUsuario` — Listar cursos inscritos (autenticado)
-`GET /:idUsuario` — Listar cursos inscritos do usuário (autenticado)
+- `POST /usuarios` — Cadastro de usuário
+- `POST /login` — Login (retorna JWT)
+- `GET /cursos` — Lista de cursos (autenticado)
+- `POST /cursos/:idCurso` — Inscrever-se em curso (autenticado)
+- `PATCH /cursos/:idCurso` — Cancelar inscrição (autenticado)
+- `GET /cursos/inscritos/:idUsuario` — Listar cursos inscritos (autenticado)
+- `GET /:idUsuario` — Listar cursos inscritos do usuário (autenticado)
 
