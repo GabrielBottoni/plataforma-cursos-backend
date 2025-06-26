@@ -19,12 +19,17 @@ const UsuarioController = {
         }
     },
 
-    async login(req, res){ 
+    async login(req, res) {
         try {
             const token = await UsuarioService.login(req.body);
 
             res.cookie('token', token, {
                 httpOnly: true,
+                secure: false,        
+                sameSite: 'lax',      
+                maxAge: 3600000,      
+                path: '/',           
+                domain: undefined
             });
 
             res.status(200).json(token);

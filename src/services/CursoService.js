@@ -7,27 +7,21 @@ const CursoService = {
     async listarCursos(usuarioId, filtro) {
         const whereClause = filtro ? {
             [Op.or]: [
-                {nome: {[Op.like]: `%${filtro}%`}},
-                {descricao: {[Op.like]: `%${filtro}%`}}
+                { nome: { [Op.like]: `%${filtro}%` } },
+                { descricao: { [Op.like]: `%${filtro}%` } }
             ]
         } : {};
 
         const cursos = await Curso.findAll({
             where: whereClause,
-            include: [
-                {
-                    model: Inscricao,
-                    attributes: []
-                }
-            ],
             attributes: {
-                include:[
+                include: [
                     [
-                        sequelize.literal('(SELECT COUNT(*) FROM inscricoes WHERE inscricoes.curso_id = Curso.id)'), 
+                        sequelize.literal('(SELECT COUNT(*) FROM inscricoes WHERE inscricoes.curso_id = Curso.id)'),
                         'total_inscricoes'
                     ],
                     [
-                        sequelize.literal(`(SELECT COUNT(*) FROM inscricoes WHERE inscricoes.curso_id = Curso.id AND inscricoes.usuario_id = ${usuarioId})`),
+                        sequelize.literal(`(SELECT COUNT(*) FROM inscricoes WHERE inscricoes.curso_id = Curso.id AND inscricoes.usuario_id = ${usuarioId} AND inscricoes.data_cancelamento IS NULL)`),
                         'usuario_inscrito'
                     ]
                 ]
@@ -47,10 +41,11 @@ const CursoService = {
 
     async listarCursosInscritos(usuarioId) {
         const cursos = await Curso.findAll({
-            include:[{
+            include: [{
                 model: Inscricao,
                 where: {
-                    usuario_id: usuarioId
+                    usuario_id: usuarioId,
+                    data_cancelamento: null
                 },
                 required: true
             }],
@@ -59,10 +54,6 @@ const CursoService = {
                     [
                         sequelize.literal('(SELECT COUNT(*) FROM inscricoes WHERE inscricoes.curso_id = Curso.id)'),
                         'total_inscricoes'
-                    ],
-                    [
-                        sequelize.literal('(Inscricaos.data_cancelamento IS NOT NULL)'),
-                        'inscricao_cancelada'
                     ]
                 ]
             }
@@ -71,14 +62,13 @@ const CursoService = {
         return cursos.map(curso => ({
             id: curso.id,
             nome: curso.nome,
-            descrição: curso.descricao,
+            descricao: curso.descricao,
             capa: curso.capa,
             inscricoes: curso.getDataValue('total_inscricoes'),
-            inicio: new Date(curso.inicio).toLocaleDateString('pt-br'),
-            inscricao_cancelada: curso.getDataValue('inscricao_cancelada') > 0,
-            inscrito: curso.getDataValue('inscricao_cancelada') === 0
-        }))
+            inicio: new Date(curso.inicio).toLocaleDateString('pt-BR'),
+            inscrito: true
+        }));
     }
-}
+};
 
 module.exports = CursoService;

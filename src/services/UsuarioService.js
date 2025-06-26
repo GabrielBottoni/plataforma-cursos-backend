@@ -29,7 +29,7 @@ const UsuarioService = {
         const returnUsuario = {
             nome: usuario.nome,
             email: usuario.email,
-            nascimento: nascimentoFormatado.format('DD-MM-YYYY')
+            nascimento: nascimentoDate.format('DD-MM-YYYY')
         };
         
         return returnUsuario;
